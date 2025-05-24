@@ -5,12 +5,15 @@ on:
     - cron: '0 16 * * *'
   push:
     branches:
-      - main 
+      - main
   workflow_dispatch:
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write 
 
     steps:
     - name: Checkout current repository
