@@ -3,20 +3,23 @@ name: Daily Fetch _worker.js
 on:
   push:
     branches:
-      - main # This will trigger on pushes to the main branch, including the initial push of the workflow file.
-  workflow_dispatch: # This allows you to manually trigger the workflow from the GitHub Actions tab.
+      - main
+  workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *' # Runs daily at 00:00 UTC
+    - cron: '0 0 * * *'
 
 jobs:
   fetch_and_commit:
     runs-on: ubuntu-latest
+    permissions: # Add this section
+      contents: write # Grant write permission for contents
+      # You might also need pull-requests: write if you plan to open PRs, but for direct push, contents: write is key.
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }} # This token now has write access
 
     - name: Download _worker.js
       run: |
