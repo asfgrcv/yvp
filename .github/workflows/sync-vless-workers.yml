@@ -1,8 +1,11 @@
-name: Sync Vless Workers Pages Content
+name: Sync Vless Workers Pages Content (Sparse Checkout)
 
 on:
   schedule:
     - cron: '0 16 * * *'
+  push:
+    branches:
+      - main 
   workflow_dispatch:
 
 jobs:
@@ -15,12 +18,14 @@ jobs:
       with:
         path: ./current-repo
 
-    - name: Clone target repository
-      uses: actions/checkout@v4
-      with:
-        repository: yonggekkk/Cloudflare_vless_trojan
-        ref: main
-        path: ./target-repo
+    - name: Prepare sparse checkout for target repository
+      run: |
+        git init ./target-repo
+        cd ./target-repo
+        git remote add origin https://github.com/yonggekkk/Cloudflare_vless_trojan.git
+        git config core.sparseCheckout true
+        echo "Vless_workers_pages/" >> .git/info/sparse-checkout
+        git pull origin main
 
     - name: Copy Vless_workers_pages content
       run: |
