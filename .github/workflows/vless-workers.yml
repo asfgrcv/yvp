@@ -1,0 +1,33 @@
+name: Fetch _worker.js
+
+on:
+  workflow_dispatch: # Allows manual triggering of the workflow
+  push:
+    branches:
+      - main # Or whatever branch you want this to run on when pushed
+
+jobs:
+  fetch_file:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download _worker.js
+      run: |
+        REPO_OWNER="yonggekkk"
+        REPO_NAME="Cloudflare_vless_trojan"
+        FILE_PATH="Trojan_workers_pages/_worker.js"
+        RAW_URL="https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}"
+
+        echo "Attempting to download: ${RAW_URL}"
+        curl -o _worker.js "${RAW_URL}"
+
+        if [ $? -eq 0 ]; then
+          echo "File downloaded successfully to _worker.js"
+          ls -l _worker.js # List the downloaded file to verify
+        else
+          echo "Error: Failed to download the file."
+          exit 1
+        fi
