@@ -8,24 +8,24 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+permissions:
+  contents: write
+
 jobs:
   fetch_and_commit:
     runs-on: ubuntu-latest
-    permissions: # Add this section
-      contents: write # Grant write permission for contents
-      # You might also need pull-requests: write if you plan to open PRs, but for direct push, contents: write is key.
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }} # This token now has write access
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Download _worker.js
       run: |
         REPO_OWNER="yonggekkk"
         REPO_NAME="Cloudflare_vless_trojan"
-        FILE_PATH="Trojan_workers_pages/_worker.js"
+        FILE_PATH="Vless_workers_pages/_worker.js"
         RAW_URL="https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}"
 
         echo "Attempting to download: ${RAW_URL}"
@@ -42,5 +42,5 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add _worker.js
-        git diff --staged --quiet || (git commit -m "chore: Update _worker.js from upstream" && git push)
+        git diff --staged --quiet || (git commit -m "chore: Update _worker.js from upstream (Vless)" && git push)
         echo "Finished commit and push step."
